@@ -22,19 +22,12 @@ namespace QrCodeApp.Controllers
         {
             try
             {
-                // Log the incoming request data
-                Console.WriteLine("Generating QR code with the following data:");
-                Console.WriteLine($"Type: {request.Type}, Color: {request.Color}, Filename: {request.Filename}");
-
                 var qrCode = _qrCodeService.GenerateQrCode(request);
-
-                // Check if QR code generation returns a valid response
                 if (qrCode == null || qrCode.Length == 0)
                 {
                     return BadRequest("Failed to generate QR code");
                 }
 
-                // Save QR code to the "QR" folder
                 var folderPath = Path.Combine(_env.ContentRootPath, "wwwroot", "QR");
                 var filePath = Path.Combine(folderPath, request.Filename);
                 System.IO.File.WriteAllBytes(filePath, qrCode);
@@ -43,7 +36,6 @@ namespace QrCodeApp.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error generating QR code: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
         }

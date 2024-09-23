@@ -2,7 +2,6 @@
 using ZXing.QrCode;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using QrCodeApp.Models;
 
 namespace QrCodeApp.Services
@@ -14,7 +13,6 @@ namespace QrCodeApp.Services
             try
             {
                 string data = GenerateQrCodeData(request);
-                Console.WriteLine("Generated QR data: " + data);  // Log the data being encoded into QR
                 return GenerateQrImage(data, request.Color);
             }
             catch (Exception ex)
