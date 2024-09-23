@@ -10,6 +10,7 @@ namespace QrCodeApp.Controllers
     {
         private readonly QrCodeService _qrCodeService;
         private readonly IWebHostEnvironment _env;
+
         public QrCodeController(QrCodeService qrCodeService, IWebHostEnvironment env)
         {
             _qrCodeService = qrCodeService;
@@ -34,11 +35,8 @@ namespace QrCodeApp.Controllers
                 }
 
                 // Save QR code to the "QR" folder
-                var folderPath = Path.Combine(_env.ContentRootPath, "wwwroot\\QR");
-                Directory.CreateDirectory(folderPath); // Create the folder if it doesn't exist
+                var folderPath = Path.Combine(_env.ContentRootPath, "wwwroot", "QR");
                 var filePath = Path.Combine(folderPath, request.Filename);
-
-                // Save the QR code as a PNG file
                 System.IO.File.WriteAllBytes(filePath, qrCode);
 
                 return File(qrCode, "image/png");
@@ -49,7 +47,5 @@ namespace QrCodeApp.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
-
     }
 }

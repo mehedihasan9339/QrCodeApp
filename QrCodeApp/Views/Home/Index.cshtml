@@ -28,8 +28,8 @@
         .qr-result-container {
             text-align: center;
             margin-top: 20px;
-            opacity: 0; /* Initial state for fade-in effect */
-            transition: opacity 0.5s ease; /* Transition for fade-in effect */
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
         .qr-card {
@@ -38,18 +38,18 @@
         }
 
             .qr-card img {
-                width: 80px; /* Size for recent QR codes */
+                width: 80px;
                 height: 80px;
-                opacity: 0; /* Initial state for fade-in effect */
-                transition: opacity 0.5s ease; /* Transition for fade-in effect */
+                opacity: 0;
+                transition: opacity 0.5s ease;
             }
 
         h1, h2 {
-            color: #343a40; /* Dark gray color for professional look */
+            color: #343a40;
         }
 
         .recent-qr-heading {
-            display: none; /* Initially hidden */
+            display: none;
         }
     </style>
 </head>
@@ -66,6 +66,13 @@
                             <option value="url">URL</option>
                             <option value="vcard">vCard</option>
                             <option value="wifi">Wi-Fi</option>
+                            <option value="email">Email</option>
+                            <option value="sms">SMS</option>
+                            <option value="text">Text Message</option>
+                            <option value="event">Event</option>
+                            <option value="geolocation">Geolocation</option>
+                            <option value="social">Social Media Profile</option>
+                            <option value="login">Website Login</option>
                         </select>
                     </div>
 
@@ -88,9 +95,7 @@
             </div>
 
             <h2 class="recent-qr-heading text-center mt-4" style="font-size: 20px;">Recently Generated QR Codes</h2>
-            <div id="recentQRs" class="d-flex justify-content-center flex-wrap">
-                <!-- QR codes will be displayed here -->
-            </div>
+            <div id="recentQRs" class="d-flex justify-content-center flex-wrap"></div>
         </div>
 
         <div class="col-md-12">
@@ -118,6 +123,30 @@
             } else if (qrTypeValue === 'wifi') {
                 requestData.ssid = $('#ssid').val();
                 requestData.key = $('#key').val();
+            } else if (qrTypeValue === 'email') {
+                requestData.emailAddr = $('#emailAddr').val();
+                requestData.emailSubject = $('#emailSubject').val();
+                requestData.emailBody = $('#emailBody').val();
+            } else if (qrTypeValue === 'sms') {
+                requestData.smsNumber = $('#smsNumber').val();
+                requestData.smsMessage = $('#smsMessage').val();
+            } else if (qrTypeValue === 'text') {
+                requestData.textMessage = $('#textMessage').val();
+            } else if (qrTypeValue === 'event') {
+                requestData.eventTitle = $('#eventTitle').val();
+                requestData.eventDate = $('#eventDate').val();
+                requestData.eventLocation = $('#eventLocation').val();
+                requestData.eventDescription = $('#eventDescription').val();
+            } else if (qrTypeValue === 'geolocation') {
+                requestData.latitude = $('#latitude').val();
+                requestData.longitude = $('#longitude').val();
+                requestData.label = $('#geoLabel').val();
+            } else if (qrTypeValue === 'social') {
+                requestData.socialUrl = $('#socialUrl').val();
+            } else if (qrTypeValue === 'login') {
+                requestData.loginUrl = $('#loginUrl').val();
+                requestData.username = $('#username').val();
+                requestData.password = $('#password').val();
             }
 
             const uniqueId = getUniqueId();
@@ -140,10 +169,8 @@
 
                     $('.left').removeClass('col-md-12').addClass('col-md-6');
                     $('.right').removeClass('col-md-12').addClass('col-md-6');
-                    // Fade in effect for the generated QR code
                     $('#qrResultContainer').css('opacity', '1');
 
-                    // Save the generated QR code in the recent QR codes area
                     saveRecentQR(url);
                 },
                 error: function (xhr, status, error) {
@@ -164,20 +191,18 @@
         function saveRecentQR(imageUrl) {
             const recentQRs = document.getElementById('recentQRs');
             const qrCard = document.createElement('div');
-            qrCard.classList.add('qr-card', 'col-2', 'text-center'); // Responsive cards
+            qrCard.classList.add('qr-card', 'col-2', 'text-center');
 
             const qrImage = document.createElement('img');
             qrImage.src = imageUrl;
             qrImage.alt = "QR Code";
-            qrImage.style.opacity = '1'; // Set opacity for fade-in
+            qrImage.style.opacity = '1';
 
             qrCard.appendChild(qrImage);
             recentQRs.appendChild(qrCard);
 
-            // Show the heading only if there are QR codes
             document.querySelector('.recent-qr-heading').style.display = 'block';
 
-            // Limit to last 5 QR codes
             if (recentQRs.children.length > 5) {
                 recentQRs.removeChild(recentQRs.firstChild);
             }
@@ -192,55 +217,134 @@
 
                 if (type === 'url') {
                     fieldsHTML = `
-                                        <div class="form-group">
-                                            <label for="url">Enter URL</label>
-                                            <input type="url" id="url" class="form-control" required placeholder="Enter your URL">
-                                        </div>`;
+                                <div class="form-group">
+                                    <label for="url">Enter URL</label>
+                                    <input type="url" id="url" class="form-control" required placeholder="Enter your URL">
+                                </div>`;
                 } else if (type === 'vcard') {
                     fieldsHTML = `
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" id="name" class="form-control" required placeholder="Enter your name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="phone">Phone</label>
-                                            <input type="tel" id="phone" class="form-control" required placeholder="Enter your phone number">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" id="email" class="form-control" required placeholder="Enter your email">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="web">Website</label>
-                                            <input type="url" id="web" class="form-control" placeholder="Enter your website">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="address">Address</label>
-                                            <input type="text" id="address" class="form-control" placeholder="Enter your address">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="dob">Date of Birth</label>
-                                            <input type="date" id="dob" class="form-control">
-                                        </div>`;
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" class="form-control" required placeholder="Enter your name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone</label>
+                                    <input type="tel" id="phone" class="form-control" required placeholder="Enter your phone number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="web">Website</label>
+                                    <input type="url" id="web" class="form-control" placeholder="Enter your website">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" id="address" class="form-control" placeholder="Enter your address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="dob">Date of Birth</label>
+                                    <input type="date" id="dob" class="form-control">
+                                </div>`;
                 } else if (type === 'wifi') {
                     fieldsHTML = `
-                                        <div class="form-group">
-                                            <label for="ssid">Network Name (SSID)</label>
-                                            <input type="text" id="ssid" class="form-control" required placeholder="Enter network name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="key">Network Key</label>
-                                            <input type="password" id="key" class="form-control" required placeholder="Enter network key">
-                                        </div>`;
+                                <div class="form-group">
+                                    <label for="ssid">Network Name (SSID)</label>
+                                    <input type="text" id="ssid" class="form-control" required placeholder="Enter network name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="key">Network Key</label>
+                                    <input type="password" id="key" class="form-control" required placeholder="Enter network key">
+                                </div>`;
+                } else if (type === 'email') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="emailAddr">Email Address</label>
+                                    <input type="email" id="emailAddr" class="form-control" required placeholder="Enter email address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="emailSubject">Subject</label>
+                                    <input type="text" id="emailSubject" class="form-control" placeholder="Enter email subject">
+                                </div>
+                                <div class="form-group">
+                                    <label for="emailBody">Body</label>
+                                    <textarea id="emailBody" class="form-control" placeholder="Enter email body"></textarea>
+                                </div>`;
+                } else if (type === 'sms') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="smsNumber">Phone Number</label>
+                                    <input type="tel" id="smsNumber" class="form-control" required placeholder="Enter phone number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="smsMessage">Message</label>
+                                    <textarea id="smsMessage" class="form-control" placeholder="Enter SMS message"></textarea>
+                                </div>`;
+                } else if (type === 'text') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="textMessage">Message</label>
+                                    <textarea id="textMessage" class="form-control" required placeholder="Enter message"></textarea>
+                                </div>`;
+                } else if (type === 'event') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="eventTitle">Event Title</label>
+                                    <input type="text" id="eventTitle" class="form-control" required placeholder="Enter event title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventDate">Date and Time</label>
+                                    <input type="datetime-local" id="eventDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventLocation">Location</label>
+                                    <input type="text" id="eventLocation" class="form-control" placeholder="Enter event location">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventDescription">Description</label>
+                                    <textarea id="eventDescription" class="form-control" placeholder="Enter event description"></textarea>
+                                </div>`;
+                } else if (type === 'geolocation') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="latitude">Latitude</label>
+                                    <input type="number" id="latitude" class="form-control" required placeholder="Enter latitude">
+                                </div>
+                                <div class="form-group">
+                                    <label for="longitude">Longitude</label>
+                                    <input type="number" id="longitude" class="form-control" required placeholder="Enter longitude">
+                                </div>
+                                <div class="form-group">
+                                    <label for="geoLabel">Label</label>
+                                    <input type="text" id="geoLabel" class="form-control" placeholder="Enter a label for the location">
+                                </div>`;
+                } else if (type === 'social') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="socialUrl">Social Media Profile URL</label>
+                                    <input type="url" id="socialUrl" class="form-control" required placeholder="Enter your social media profile URL">
+                                </div>`;
+                } else if (type === 'login') {
+                    fieldsHTML = `
+                                <div class="form-group">
+                                    <label for="loginUrl">Website Login URL</label>
+                                    <input type="url" id="loginUrl" class="form-control" required placeholder="Enter website login URL">
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" id="username" class="form-control" required placeholder="Enter your username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" class="form-control" required placeholder="Enter your password">
+                                </div>`;
                 }
 
                 dynamicInputFields.innerHTML = fieldsHTML;
             };
 
-            // Update fields based on initial type
             updateInputFields(qrType.value);
-
-            // Listen for changes in QR code type
             qrType.addEventListener('change', function () {
                 updateInputFields(this.value);
             });

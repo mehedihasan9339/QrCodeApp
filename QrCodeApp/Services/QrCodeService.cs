@@ -24,7 +24,6 @@ namespace QrCodeApp.Services
             }
         }
 
-
         private string GenerateQrCodeData(QrCodeRequest request)
         {
             switch (request.Type.ToLower())
@@ -42,6 +41,25 @@ namespace QrCodeApp.Services
                            $"END:VCARD";
                 case "wifi":
                     return $"WIFI:S:{request.Ssid};T:WPA;P:{request.Key};;";
+                case "email":
+                    return $"mailto:{request.EmailAddr}?subject={request.EmailSubject}&body={request.EmailBody}";
+                case "sms":
+                    return $"sms:{request.SmsNumber}?body={request.SmsMessage}";
+                case "text":
+                    return request.TextMessage;
+                case "event":
+                    return $"BEGIN:VEVENT\n" +
+                           $"SUMMARY:{request.EventTitle}\n" +
+                           $"DTSTART:{request.EventDate}\n" +
+                           $"LOCATION:{request.EventLocation}\n" +
+                           $"DESCRIPTION:{request.EventDescription}\n" +
+                           $"END:VEVENT";
+                case "geolocation":
+                    return $"geo:{request.Latitude},{request.Longitude}?q={request.Label}";
+                case "social":
+                    return request.SocialUrl;
+                case "login":
+                    return $"Login URL: {request.LoginUrl}, Username: {request.Username}, Password: {request.Password}";
                 default:
                     throw new ArgumentException("Invalid QR code type");
             }
